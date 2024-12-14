@@ -7,10 +7,12 @@ import LineChartWeather from './components/LineChartWeather';
 import HeaderWeather from './components/HeaderWeather';
 
 import Item from './interface/Item';
+import header from './interface/header';
+import Point from './interface/Point';
 
 {/* Hooks */ }
 import { useEffect, useState } from 'react';
-import header from './interface/header';
+
 
 interface Indicator {
   title?: String;
@@ -29,6 +31,7 @@ function App() {
   let [indicators, setIndicators] = useState<Indicator[]>([])
   let [owm, setOWM] = useState(localStorage.getItem("openWeatherMap"))
   let [items, setItems] = useState<Item[]>([])
+  let [points, setPoints] = useState<Point[]>([])
   let [header, setHeader] = useState<header>({
     city: '',
     alt: '',
@@ -87,6 +90,7 @@ function App() {
 
         {/* Arreglo para agregar los resultados */ }
         let dataToIndicators: Indicator[] = new Array<Indicator>();
+        let dataToGraphic: Point[] = new Array<Point>();
         let dataToTable: Item[] = [];
         let currentHourSec = convertirAHorasSegundos(new Date().toLocaleTimeString('es-ES', {
           hour12: false,
@@ -99,18 +103,20 @@ function App() {
         let altitude = location.getAttribute("altitude") || ""
 
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 8; i++) {
           let time = xml.getElementsByTagName("time")[i]
 
           let fromTime = time.getAttribute("from") || ""
           let toTime = time.getAttribute("to") || ""
 
           const regex = /\d{4}-\d{2}-\d{2}T(\d{2}:\d{2}:\d{2})/;
-          let matchFromTime = fromTime.match(regex);
+          let matchFromTime = fromTime.match(regex) || "";
           let matchToTime = toTime.match(regex);
 
           let temperature = time.getElementsByTagName("temperature")[0]
           let tempValue = (parseFloat(temperature ? temperature.getAttribute("value") || "" : "") - 273.15).toFixed(1)
+          let tempMaxValue = (parseFloat(temperature ? temperature.getAttribute("max") || "" : "") - 273.15)
+          let tempMinValue = (parseFloat(temperature ? temperature.getAttribute("min") || "" : "") - 273.15)
 
           let thermalSensation = time.getElementsByTagName("feels_like")[0]
           let thermSensValue = (parseFloat(thermalSensation ? thermalSensation.getAttribute("value") || "" : "") - 273.15).toFixed(1)
@@ -165,12 +171,21 @@ function App() {
             precipitation: probability
           };
 
+          let point: Point = {
+            maxTemp: tempMaxValue,
+            minTemp: tempMinValue,
+            hour: matchFromTime[1]
+          };
+
           dataToTable.push(item);
+          dataToGraphic.push(point);
+          
         }
 
         {/* Modificación de la variable de estado mediante la función de actualización */ }
         setIndicators(dataToIndicators)
         setItems(dataToTable)
+        setPoints(dataToGraphic)
         setHeader({
           city: name,
           lat: latitude,
@@ -214,7 +229,7 @@ function App() {
           <Grid container spacing={2}>
             {/* Gráfico */}
             <Grid size={{ xs: 12, sm: 8 }}>
-              <LineChartWeather />
+              <LineChartWeather itemsIn={points}/>
             </Grid>
             <Grid size={{ xs: 12, sm: 4 }}>
               <ControlWeather />
