@@ -31,6 +31,7 @@ function App() {
   let [indicators, setIndicators] = useState<Indicator[]>([])
   let [owm, setOWM] = useState(localStorage.getItem("openWeatherMap"))
   let [items, setItems] = useState<Item[]>([])
+  let [selectedVariable, setSelectedVariable] = useState(0);
   let [points, setPoints] = useState<Point[]>([])
   let [header, setHeader] = useState<header>({
     city: '',
@@ -115,8 +116,8 @@ function App() {
 
           let temperature = time.getElementsByTagName("temperature")[0]
           let tempValue = (parseFloat(temperature ? temperature.getAttribute("value") || "" : "") - 273.15).toFixed(1)
-          let tempMaxValue = (parseFloat(temperature ? temperature.getAttribute("max") || "" : "") - 273.15)
-          let tempMinValue = (parseFloat(temperature ? temperature.getAttribute("min") || "" : "") - 273.15)
+          let tempMaxValue = (parseFloat(temperature ? temperature.getAttribute("max") || "" : "") - 273.15).toString()
+          let tempMinValue = (parseFloat(temperature ? temperature.getAttribute("min") || "" : "") - 273.15).toString()
 
           let thermalSensation = time.getElementsByTagName("feels_like")[0]
           let thermSensValue = (parseFloat(thermalSensation ? thermalSensation.getAttribute("value") || "" : "") - 273.15).toFixed(1)
@@ -154,7 +155,7 @@ function App() {
 
               dataToIndicators.push({ "title": "Precipitation", "subtitle": cloudsValue, "value": probability + "%" })
 
-              dataToIndicators.push({ "title": nameWind, "subtitle": direction, "value": speed + " m/s" })
+              dataToIndicators.push({ "title": "Wind", "subtitle": nameWind +" "+ direction , "value": speed + " m/s" })
 
             }
 
@@ -174,12 +175,15 @@ function App() {
           let point: Point = {
             maxTemp: tempMaxValue,
             minTemp: tempMinValue,
-            hour: matchFromTime[1]
+            hour: matchFromTime[1],
+            precipitation: probability,
+            humidity: humidityValue,
+            clouds: cloudsAll
           };
 
           dataToTable.push(item);
           dataToGraphic.push(point);
-          
+
         }
 
         {/* Modificación de la variable de estado mediante la función de actualización */ }
@@ -229,10 +233,16 @@ function App() {
           <Grid container spacing={2}>
             {/* Gráfico */}
             <Grid size={{ xs: 12, sm: 8 }}>
-              <LineChartWeather itemsIn={points}/>
+              <LineChartWeather
+                itemsIn={points}
+                selectedVariable={selectedVariable}
+              />
             </Grid>
             <Grid size={{ xs: 12, sm: 4 }}>
-              <ControlWeather />
+              <ControlWeather
+                onVariableChange={setSelectedVariable}
+                selectedVariable={selectedVariable}
+              />
             </Grid>
           </Grid>
         </Grid>

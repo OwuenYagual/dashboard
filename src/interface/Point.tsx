@@ -1,5 +1,8 @@
-export default interface point {
-    uData: number;
-    pData: number;
+export default interface Point {
+    maxTemp: string;
+    minTemp: string;
     hour: string;
+    precipitation: string;
+    humidity: string;        
+    clouds: string;         
 }

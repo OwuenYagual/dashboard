@@ -1,5 +1,5 @@
 {/* Hooks */ }
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 
 {/* Componentes MUI */ }
 import Paper from '@mui/material/Paper';
@@ -11,20 +11,24 @@ import FormControl from '@mui/material/FormControl';
 
 {/* Interfaz SelectChangeEvent */ }
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+interface ControlWeatherProps {
+    selectedVariable: number;
+    onVariableChange: (value: number) => void;
+}
 
-export default function ControlWeather() {
+export default function ControlWeather({ selectedVariable, onVariableChange }: ControlWeatherProps) {
 
     {/* Constante de referencia a un elemento HTML */ }
     const descriptionRef = useRef<HTMLDivElement>(null);
 
     {/* Variable de estado y función de actualización */ }
-    let [selected, setSelected] = useState(-1)
 
     {/* Arreglo de objetos */ }
     let items = [
-        { "name": "Precipitación", "description": "Cantidad de agua que cae sobre una superficie en un período específico." },
-        { "name": "Humedad", "description": "Cantidad de vapor de agua presente en el aire, generalmente expresada como un porcentaje." },
-        { "name": "Nubosidad", "description": "Grado de cobertura del cielo por nubes, afectando la visibilidad y la cantidad de luz solar recibida." }
+        { "name": "Temperature", "description": "Level of heat or cold in the environment, expressed in degrees Celsius (°C)"},
+        { "name": "Precipitation", "description": "Amount of water that falls on a surface in a specific period." },
+        { "name": "Humidity", "description": "Amount of water vapor present in the air, generally expressed as a percentage." },
+        { "name": "Clouds", "description": "Degree of sky coverage by clouds, affecting visibility and the amount of sunlight received." }
     ]
 
     {/* Arreglo de elementos JSX */ }
@@ -34,7 +38,7 @@ export default function ControlWeather() {
     const handleChange = (event: SelectChangeEvent) => {
 
         let idx = parseInt(event.target.value)
-        setSelected(idx);
+        onVariableChange(idx);
 
         {/* Modificación de la referencia descriptionRef */}
         if (descriptionRef.current !== null) {
@@ -65,10 +69,10 @@ export default function ControlWeather() {
                         labelId="simple-select-label"
                         id="simple-select"
                         label="Variables"
-                        defaultValue='-1'
+                        defaultValue={selectedVariable.toString()}
                         onChange={handleChange}
                     >
-                        <MenuItem key="-1" value="-1" disabled>Seleccione una variable</MenuItem>
+                        {/*<MenuItem key="-1" value="-1" disabled>Seleccione una variable</MenuItem>*/}
 
                         {options}
 

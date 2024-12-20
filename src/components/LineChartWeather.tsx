@@ -6,26 +6,79 @@ import { useEffect, useState } from 'react';
 
 interface MyProp {
   itemsIn: Point[];
+  selectedVariable: number;
 }
 
-export default function LineChartWeather(props: MyProp) {
+export default function LineChartWeather({ itemsIn, selectedVariable }: MyProp) {
 
     let[points, setPoints] = useState<Point[]>([])
-      useEffect(() => {
-        setPoints(props.itemsIn)
-    }, [props])
 
-    // Variables para acumular los datos de todas las series
-    let maxTempArray: number[] = [];
-    let minTempArray: number[] = [];
-    let xLabelsArray: string[] = [];
+    useEffect(() => {
+        setPoints(itemsIn)
+    }, [itemsIn])
 
-    // Recorre los puntos y llena los arrays de datos
-    points.forEach((point) => {
-        maxTempArray.push(point.maxTemp); 
-        minTempArray.push(point.minTemp); 
-        xLabelsArray.push(point.hour); 
-    });
+    const getDataForVariable = () => {
+        switch (selectedVariable) {
+            case 0: // Temperatura
+                return {
+                    series: [
+                        {
+                            data: points.map(p => parseFloat(p.maxTemp || '0') || null),
+                            label: 'Maximum temperature',
+                        },
+                        {
+                            data: points.map(p => parseFloat(p.minTemp || '0') || null),
+                            label: 'Minimum temperature',
+                        },
+                    ],
+                    label: 'Temperature (°C)',
+                };
+            case 1: // Precipitación
+                return {
+                    series: [
+                        {
+                            data: points.map(p => parseFloat(p.precipitation || '0') || null), 
+                            label: 'Precipitation',
+                        },
+                    ],
+                    label: 'Precipitation (%)',
+                };
+            case 2: // Humedad
+                return {
+                    series: [
+                        {
+                            data: points.map(p => parseFloat(p.humidity || '0') || null), 
+                            label: 'Humidity',
+                        },
+                    ],
+                    label: 'Humidity (%)',
+                };
+            case 3: // Nubosidad
+                return {
+                    series: [
+                        {
+                            data: points.map(p => parseFloat(p.clouds || '0') || null), 
+                            label: 'Clouds',
+                        },
+                    ],
+                    label: 'Clouds (%)',
+                };
+            default:
+                return {
+                    series: [
+                        {
+                            data: points.map(p => parseFloat(p.maxTemp) || null),
+                            label: 'Temperatura máxima',
+                        },
+                    ],
+                    label: 'Temperatura (°C)',
+                };
+        }
+    };
+    
+    
+    let chartData = getDataForVariable();
+
     
     return (
         <Paper
@@ -39,13 +92,13 @@ export default function LineChartWeather(props: MyProp) {
             {/* Componente para un gráfico de líneas */}
                 <LineChart
                 
-                width={800}
-                height={250}
-                series={[
-                    { data: maxTempArray, label: 'Temperatura máxima' },
-                    { data: minTempArray, label: 'Temperatura mínima' },
-                ]}
-                xAxis={[{ scaleType: 'point', data: xLabelsArray }]}
+                width={830}
+                height={400}
+                series={chartData.series}
+                xAxis={[{ scaleType: 'point', data: points.map(p => p.hour), label: 'Hour' }]}
+                yAxis={[{
+                    label: chartData.label
+                }]}
             />
             
         </Paper>
