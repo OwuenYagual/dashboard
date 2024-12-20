@@ -61,7 +61,7 @@ export default function ControlWeather({ selectedVariable, onVariableChange }: C
                 Variables Meteorológicas
             </Typography>
 
-            <Box sx={{ minWidth: 120 }}>
+            <Box sx={{ minWidth: 120}}>
 
                 <FormControl fullWidth>
                     <InputLabel id="simple-select-label">Variables</InputLabel>

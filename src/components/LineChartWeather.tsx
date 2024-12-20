@@ -92,8 +92,8 @@ export default function LineChartWeather({ itemsIn, selectedVariable }: MyProp) 
             {/* Componente para un gráfico de líneas */}
                 <LineChart
                 
-                width={830}
-                height={400}
+                width={780}
+                height={346}
                 series={chartData.series}
                 xAxis={[{ scaleType: 'point', data: points.map(p => p.hour), label: 'Hour' }]}
                 yAxis={[{

@@ -114,6 +114,9 @@ function App() {
           let matchFromTime = fromTime.match(regex) || "";
           let matchToTime = toTime.match(regex);
 
+          let symbol = time.getElementsByTagName("symbol")[0]
+          let nameRain = symbol ? symbol.getAttribute("name") || "" : ""
+
           let temperature = time.getElementsByTagName("temperature")[0]
           let tempValue = (parseFloat(temperature ? temperature.getAttribute("value") || "" : "") - 273.15).toFixed(1)
           let tempMaxValue = (parseFloat(temperature ? temperature.getAttribute("max") || "" : "") - 273.15).toString()
@@ -151,9 +154,9 @@ function App() {
 
               dataToIndicators.push({ "title": "Temperature", "subtitle": "Feels like: " + thermSensValue + "°C", "value": tempValue.toString() + "°C" })
 
-              dataToIndicators.push({ "title": "Humidity", "subtitle": "xd", "value": humidityValue + "%" })
+              dataToIndicators.push({ "title": "Humidity", "subtitle": cloudsValue, "value": humidityValue + "%" })
 
-              dataToIndicators.push({ "title": "Precipitation", "subtitle": cloudsValue, "value": probability + "%" })
+              dataToIndicators.push({ "title": "Precipitation", "subtitle": nameRain, "value": probability + "%" })
 
               dataToIndicators.push({ "title": "Wind", "subtitle": nameWind +" "+ direction , "value": speed + " m/s" })
 
@@ -206,18 +209,18 @@ function App() {
 
   return (
     <>
-      <HeaderWeather
+        <HeaderWeather
         city={header.city}
         lat={header.lat}
         lon={header.lon}
         alt={header.alt} />
-
-      <Grid container spacing={5}>
+      
+    <Grid container spacing={5}>
         {
           indicators
             .map(
               (indicator, idx) => (
-                <Grid key={idx} size={{ xs: 12, sm: 3 }}>
+                <Grid  id="cardIndicator" key={idx} size={{ xs: 12, sm: 3 }}>
                   <IndicatorWeather
                     title={indicator["title"]}
                     subtitle={indicator["subtitle"]}
@@ -253,6 +256,8 @@ function App() {
 
 
       </Grid>
+        
+      
     </>
   )
 }

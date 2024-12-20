@@ -1,7 +1,6 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  padding-top: 0;
+  padding-bottom: 0;
   text-align: center;
 }
 
@@ -39,4 +38,51 @@
 
 .read-the-docs {
   color: #888;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items:  center;
+  width:auto;
+  background-color: #ffffff;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 30px 60px 30px 60px;
+}
+
+#root > header > h1 {
+  text-align: left;
+  font-size: 2rem;
+  color: #444;
+}
+
+#root > header > p {
+  font-size: 1.4rem;
+  color: #444;
+}
+
+#root > div {
+  padding: 60px;
+}
+
+#cardIndicator .card-indicator{
+  background-color: #626CF2;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+#cardIndicator .card-indicator h2 {
+  color: #ffffff;
+  text-align: left;
+}
+
+#cardIndicator .card-indicator p.MuiTypography-h4{
+  color: #ffffff;
+  font-size: 48px;
+}
+
+#cardIndicator .card-indicator p.MuiTypography-body1{
+  color: #ffffff;
+  opacity: 50%;
 }

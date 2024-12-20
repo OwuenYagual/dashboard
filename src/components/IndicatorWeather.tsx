@@ -10,7 +10,7 @@ interface Indicator {
 export default function IndicatorWeather(config: Indicator) {
     return (
         <>
-            <Paper
+            <Paper className='card-indicator'
                 sx={{
                     p: 2,
                     display: 'flex',
