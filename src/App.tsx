@@ -134,7 +134,6 @@ function App() {
 
   useEffect(() => {
     const request = async () => {
-      const saved = localStorage.getItem("openWeatherMap") || "";
       const exp = parseInt(localStorage.getItem("expiringTime") || "0");
       const now = Date.now();
 
